@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db, User
+from models import db, User, People, Planet, Vehicles, Favorite
 #from models import Person
 
 app = Flask(__name__)
@@ -45,6 +45,40 @@ def handle_hello():
 
     return jsonify(response_body), 200
 
+@app.route('/people')
+def get_people():
+    people = People.query.all()
+    return jsonify([p.serialize for p in people])
+
+@app.route('/people/<int:people_id>')
+def get_people_by_id(people_id):
+    person = People.query.get_or_404(people_id)
+    return jsonify(person.serialize)
+
+@app.route('/planets')
+def get_people():
+    planets = Planet.query.all()
+    return jsonify([p.serialize for p in planets])
+
+@app.route('/planets/<int:planet_id>')
+def get_planet_by_id(planet_id):
+    planet = Planet.query.get_or_404(planet_id)
+    return jsonify(planet.serialize)
+
+@app.route('/vehicles')
+def get_vehicles():
+    vehicles = Vehicles.query.all()
+    return jsonify(v.serialize for v in vehicles)
+
+@app.route('/vehicles/<int:vehicle_id>')
+def get_vehicle_by_id(vehicle_id):
+    vehicle = Vehicles.query.get_or_404(vehicle_id)
+    return jsonify(vehicle.serialize)
+
+
+
+
+        
 # this only runs if `$ python src/app.py` is executed
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
